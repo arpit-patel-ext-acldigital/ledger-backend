@@ -1,9 +1,8 @@
-import * as mongoose from 'mongoose';
-import {User} from './user';
 import {validateName, validateEmail, validateDob} from '../common/mongovalidator';
 import { Schema } from 'mongoose';
-
-const documentSchema =  new Schema<User>({
+import { UserDto } from './dto/user.dto';
+import {hashSync} from 'bcryptjs';
+export const UserSchema =  new Schema<UserDto>({
     firstName: {
         type: String,
         ...validateName
@@ -20,9 +19,14 @@ const documentSchema =  new Schema<User>({
     password: {
         type: String,
     },
+    token: String,
 }, {
     timestamps: true,
     collection: 'users'
 })
 
-export default mongoose.model('users',documentSchema);
+UserSchema.pre('save', function (next) {
+    const user : UserDto = this;
+    user.password = hashSync(user.password, 10);
+    next();
+})
