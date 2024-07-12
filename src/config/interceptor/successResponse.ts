@@ -1,3 +1,4 @@
+import { getMessage } from '@common/utils';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import e from 'express';
 import { Observable } from 'rxjs';
@@ -20,10 +21,13 @@ export class successResponse implements NestInterceptor {
 
   responseHandler(res: any, context: ExecutionContext) {
     const ctx = context.switchToHttp();
+    const request = ctx.getRequest()
     const response = ctx.getResponse();
+    const language = request.headers['language'];
+
     return response.status(200).json({
       statusCode: 200,
-      message: res?.message,
+      message: getMessage(res?.message, language),
       data: res?.data,
     });
   }

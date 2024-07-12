@@ -16,6 +16,7 @@ export const IncomeHistorySchema =  new Schema<IncomesHistoryDto>({
         type: Schema.ObjectId,
         ref: constants.MODELS.BANKS
     },
+    time: { type: Date },
     subCategoryId: {
         type: Schema.ObjectId,
         ref: constants.MODELS.SUB_CATEGORIES

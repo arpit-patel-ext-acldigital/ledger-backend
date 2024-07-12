@@ -1,0 +1,31 @@
+{
+    "USER_ALREADY_REGISTERED": "User already Registered",
+    "SIGNUP_SUCCESS": "Signup Successfully",
+    "WRONG_CRED": "Wrong Credentials",
+    "LOGIN_SUCCESS": "Login Successfully",
+
+    "BANK_LIST": "Bank List",
+    "BANK_CREATED": "Bank Created Successfully",
+    "BANK_UPDATED": "Bank Updated Successfully",
+    "BANK_DETAILS": "Bank Details",
+    "BANK_DELETED": "Bank Deleted Successfully",
+
+    "CATEGORY_EXIST": "Category with the same name already exist",
+    "CATEGORY_LIST": "Category List",
+    "CATEGORY_CREATED": "Category Created Successfully",
+    "CATEGORY_UPDATED": "Category Updated Successfully",
+    "CATEGORY_DETAILS": "Category Details",
+    "CATEGORY_DELETED": "Category Deleted Successfully",
+    "CATEGORY_NOT_FOUND": "Category Not Found",
+
+    "SUB_CATEGORY_EXIST": "sub category with the same name already exist",
+    "SUB_CATEGORY_LIST": "Sub Category List",
+    "SUB_CATEGORY_CREATED": "Sub Category Created Successfully",
+    "SUB_CATEGORY_UPDATED": "Sub Category Updated Successfully",
+    "SUB_CATEGORY": "Sub Category Details",
+    "SUB_CATEGORY_DELETED": "Sub Category Deleted Successfully",
+
+    "INCOME_ADDED": "Income added successfully",
+    "AUTO_INCOME_ADDED": "Auto income added",
+    "INCOME_SET_AS_AUTO": "Income set as auto income"
+}

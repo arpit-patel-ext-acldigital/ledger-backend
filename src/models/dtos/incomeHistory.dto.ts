@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator"
+import { IsDate, IsNumber, IsString } from "class-validator"
 import { ObjectId } from "mongoose"
 
 export class IncomesHistoryDto {
@@ -9,6 +9,8 @@ export class IncomesHistoryDto {
     @IsNumber()
     readonly amount: number
     
+    @IsDate()
+    readonly time: Date
     readonly bankId: ObjectId
     readonly categoryId: ObjectId
     readonly subCategoryId: ObjectId
@@ -16,5 +18,4 @@ export class IncomesHistoryDto {
     readonly createdAt: Date
     readonly updatedAt: Date
   }
-  
 

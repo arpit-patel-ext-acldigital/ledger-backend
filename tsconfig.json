@@ -24,5 +24,6 @@
       "@jobs/*": ["src/jobs/*"],
       "@models/*": ["src/models/*"],
     },
+    "resolveJsonModule": true
   }
 }

@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
-import { CategoryDto } from '@models/dtos/category.dto';
+import { Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { CategoryFiltersDto, CategoryIdDto, CreateCategoryDto, UpdateCategoryDto } from '@models/dtos/category.dto';
 import { CategoryService } from './category.service';
 import { AuthGuard } from '@config/guard/auth.guard';
-import { UserService } from '@components/user/user.service';
 
 
 @UseGuards(AuthGuard)
@@ -11,51 +10,69 @@ export class CategoryController {
     constructor(private categoryService: CategoryService) {};
 
     @Get('/list')
-    async list(@Req() request: Request, @Res() response: Response): Promise<any> {
-        const list = await this.categoryService.getAll();
-        console.log('list', list);
+    async list(@Query() query: CategoryFiltersDto, @Req() request: Request, @Res() response: Response): Promise<any> {
+        const {_id: _authUser } = request['user'];
+        const list = await this.categoryService.getAll(_authUser, query);
         return {
-            message: 'Category List',
+            message: 'CATEGORY_LIST',
             data: list
         }        
     }
 
     @Post('/')
-    async create(@Body() body: CategoryDto, @Req() request: Request, @Res() response: Response): Promise<any> {
-        const category = await this.categoryService.create({...body, createdBy: request['user']?._id});
+    async create(@Body() body: CreateCategoryDto, @Req() request: Request,  @Res() response: Response): Promise<any> {
+        const {_id: _authUser } = request['user'];
+
+        const isExist = await this.categoryService.get(_authUser, body.name, 'name');
+        if (isExist) throw new ConflictException('CATEGORY_EXIST');
+        const category = await this.categoryService.create({
+            ...body,
+            createdBy: _authUser,
+            isActive: false,
+        });
         return {
-            message: 'Category Created Successfully',
+            message: 'CATEGORY_CREATED',
             data: category
         }
     }
 
     @Put('/:id')
-    async update(@Body() body: CategoryDto,@Param() params: any, @Req() request: Request, @Res() response: Response): Promise<any> {
-        const {id} = params
+    async update(@Body() body: UpdateCategoryDto ,@Param() params: CategoryIdDto, @Req() request: Request, @Res() response: Response): Promise<any> {
+        const {_id: _authUser } = request['user'];
+        const {id} = params;
+        const isExist = await this.categoryService.get(_authUser, body.name, 'name');
+        if (isExist) throw new ConflictException('CATEGORY_EXIST');
         const details = await this.categoryService.update(id, body);
+        if (!details) throw new NotFoundException('CATEGORY_NOT_FOUND')
         return {
-            message: 'Category Updated Successfully',
+            message: 'CATEGORY_UPDATED',
             data: details
         }
     }
 
     @Get('/details/:id')
-    async details(@Param() params: any, @Req() request: Request, @Res() response: Response): Promise<any> {
+    async details(@Param() params: CategoryIdDto, @Req() request: Request,  @Res() response: Response): Promise<any> {
+        const {_id: _authUser } = request['user'];
         const {id} = params
-        const details = await this.categoryService.get(id);
+        const details = await this.categoryService.get(_authUser, id);
         return {
-            message: 'Category Details',
+            message: 'CATEGORY_DETAILS',
             data: details
         }
     }
 
     @Delete('/:id')
-    async remove(@Param() params: any, @Req() request: Request, @Res() response: Response): Promise<any> {
+    async remove(@Param() params: CategoryIdDto, @Req() request: Request,  @Res() response: Response): Promise<any> {
         const {id} = params
-        const details = await this.categoryService.deleteOne(id);
-        return {
-            message: 'Category Deleted Successfully',
-            data: details
+        const {_id: _authUser } = request['user'];
+        const details = await this.categoryService.deleteOne(_authUser, id);
+        if (details) {
+            return {
+                message: 'CATEGORY_DELETED',
+                data: details
+            }    
+        } else {
+            throw new NotFoundException('CATEGORY_NOT_FOUND')
         }
     }
 
